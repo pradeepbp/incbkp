@@ -1,2 +1,2 @@
 # incbkp
-Utility for incremental backup. Entirely re-written in Java 
+Utility for incremental backup; re-written in Java 

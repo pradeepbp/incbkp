@@ -1,0 +1,10 @@
+This is where the exact specifications will be found. This file keeps of evolving based on change requests and the coding status.
+
+1. Create a backup location:
+    a. Get input in the form of a path
+    b. Update config file with path and the creation time
+    c. Create a new for backing up at the indicated destination
+    d. Create a file (csv?) with list of files and folders for which backup has to be taken
+    
+    
+

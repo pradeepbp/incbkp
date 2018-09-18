@@ -1,0 +1,6 @@
+
+#TODO
+#This file contains the list of tasks to be completed in the the order of priority
+
+1. Create a package for handling csv files
+ 

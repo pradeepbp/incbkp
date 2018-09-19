@@ -27,6 +27,7 @@ import bkp.*;
  class IncBackup{
      public static void main(String[] args){
         System.out.println("App Initialised...");
+        ConfigOp newOp = new ConfigOp();
 		String input = null;
 		if(args.length > 0){
 			input = args[0];
@@ -35,14 +36,16 @@ import bkp.*;
         
 		//Try creating a new backup location
         if(input != null){
-			ConfigOp newOp = new ConfigOp();
-			System.out.println("Class created");
-			// System.out.println(newOp.createPath("~/temp1/bkp").toString());
+			newOp = new ConfigOp();
 			System.out.println(newOp.createBkpLocation(newOp.createPath(input)));
 		}
 		else
 			System.out.println("No path specified. Try again with a valid backup location");
+
+         newOp.createConfigFile();
      }// main function
+
+       
 
  } // main class ends
 

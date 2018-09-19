@@ -34,5 +34,18 @@ public class ConfigOp{
         
     }
 
+    //Function to create a new config file at backup location and populate with
+    //metadata
+
+    public boolean createConfigFile(){
+        String configFileName = ".config";
+        FileSystem currentFileSystem = FileSystems.getDefault();
+        String separator = currentFileSystem.getSeparator();
+        System.out.println("File separator is "+separator);
+        System.out.println("File system is +"+currentFileSystem.toString()+
+                            "provided by "+currentFileSystem.provider().toString());
+        return true;
+
+    }
 
 } // end of class

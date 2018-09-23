@@ -23,6 +23,7 @@
  */
 
 import bkp.*;
+import java.nio.file.*;
 
  class IncBackup{
      public static void main(String[] args){
@@ -35,14 +36,18 @@ import bkp.*;
 		System.out.println("Path is " + input);
         
 		//Try creating a new backup location
+        Path path = null;
         if(input != null){
 			newOp = new ConfigOp();
-			System.out.println(newOp.createBkpLocation(newOp.createPath(input)));
+            path = newOp.createPath(input);
+            boolean result = newOp.createBkpLocation(path);
+			System.out.println(result);
 		}
 		else
 			System.out.println("No path specified. Try again with a valid backup location");
 
-         newOp.createConfigFile();
+         newOp.createConfigFile(path);
+         
      }// main function
 
        

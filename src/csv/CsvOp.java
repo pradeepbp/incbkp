@@ -2,7 +2,7 @@ package csv;
 
 import java.nio.file.*;
 import java.io.*;
-
+import java.util.*;
 
 
 public class CsvOp{
@@ -44,9 +44,34 @@ public class CsvOp{
 
         return result;
     } // end of function
+   
 
 
-    
+
+   // Function returns the number of items in the header
+   public int getHeaderSize(){
+       int size = 0;
+       try(BufferedReader csvReader = Files.newBufferedReader(csvPath)){
+           String headerLine = csvReader.readLine();
+           String[] heads = headerLine.split(",");
+           size = heads.length;
+       }
+       catch(IOException ioe){
+           System.err.println("ERROR: Cannot read csv header");
+       }
+       finally{
+           return size;
+       }
+ 
+   }
+
+
+
+   // Function to append a row of data. Checks for length of header and items
+   // in the input row before performing the operation 
+   public boolean writeRow(){
+       return false;
+   }
 
     public void getHeader(){
 

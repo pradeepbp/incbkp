@@ -13,6 +13,8 @@ class TryCSV{
         boolean result = newCsvOp.createCsvFile(header);
         System.out.println(result);                           
 
+        int n = newCsvOp.getHeaderSize();
+        System.out.println(n);
     }
 
 }

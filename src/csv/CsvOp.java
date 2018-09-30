@@ -8,7 +8,7 @@ import java.util.*;
 public class CsvOp{
 
     public Path csvPath = null;
-    boolean headerAvailable = false;
+    
 
     public CsvOp(String path){
         this.csvPath = Paths.get(path);
@@ -38,7 +38,7 @@ public class CsvOp{
      */
     public boolean addHeader(String[] heads){
         boolean result = false;
-        if(!headerAvailable){
+        
             // Create a header string with ',' as delimiter
             String headerString = heads[0];
             for (int i = 1; i <= heads.length - 1; i++){
@@ -49,16 +49,12 @@ public class CsvOp{
             try(BufferedWriter writer = Files.newBufferedWriter(this.csvPath)){
                 writer.write(headerString);
                 writer.newLine();
-                result = true;
-                headerAvailable = true;  
+                result = true;  
             }
             catch(IOException ioe){
                 System.err.println("ERROR: Could not write to CSV file");
             }
-        }
-        else{
-            System.out.println("WARNING: Header available");
-        }
+                
         return result;
     } // end of function
 

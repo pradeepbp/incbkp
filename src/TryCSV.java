@@ -11,10 +11,10 @@ class TryCSV{
         CsvOp newCsvOp = new CsvOp("/home/pradeep/temp/newcsv.csv");
 
         //newCsvOp.createCsvFile();
-        //newCsvOp.addHeader(header);
+        newCsvOp.addHeader(header);
         //newCsvOp.addRow("Pradeep, kavi, abhinav");
-        System.out.println(newCsvOp.getRow(2));
-        System.out.println(newCsvOp.getHeader());
+        //System.out.println(newCsvOp.getRow(2));
+        //System.out.println(newCsvOp.getHeader());
 
 
         

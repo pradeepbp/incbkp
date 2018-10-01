@@ -28,7 +28,7 @@ import java.nio.file.*;
  class IncBackup{
      public static void main(String[] args){
         System.out.println("App Initialised...");
-        ConfigOp newOp = new ConfigOp();
+        //ConfigOp newOp = new ConfigOp();
 		String input = null;
 		if(args.length > 0){
 			input = args[0];
@@ -36,17 +36,19 @@ import java.nio.file.*;
 		System.out.println("Path is " + input);
         
 		//Try creating a new backup location
-        Path path = null;
+        ConfigOp newOp = null;
         if(input != null){
-			newOp = new ConfigOp();
-            path = newOp.createPath(input);
-            boolean result = newOp.createBkpLocation(path);
-			System.out.println(result);
+			newOp = new ConfigOp(input);
+            //boolean result = newOp.createBkpLocation();
+			//System.out.println(result);
 		}
 		else
 			System.out.println("No path specified. Try again with a valid backup location");
 
-         newOp.createConfigFile(path);
+        //newOp.createConfigFile();
+        //System.out.println(newOp.getProperty("FileSeparator"));
+        System.out.println(newOp.getBackupLocation());
+        newOp.createCsvDataBase("csvdata");
          
      }// main function
 

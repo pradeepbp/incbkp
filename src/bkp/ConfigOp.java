@@ -1,32 +1,46 @@
 package bkp;
 
+import csv.*;
+
 import java.nio.file.*;
 import java.io.*;
+import java.util.*;
 
 
 public class ConfigOp{
 
     private String configFileName = ".bkpconfig";
+    Path bkpLocation = null;
+    Path configFilePath = null;
+    String separator = "";
 
-    // Create a path object pointing to the backup destination
-    Path bkpPath;
-    public Path createPath(String bkpLocation){
-       try{
-            return Paths.get(bkpLocation);
-        }
-        catch(InvalidPathException ipe){
-            System.out.println("ERROR: cannot create path object");
-            return null;
-        }
-              
-    }
 
-    // Create a folder at backup location. Returns 'true' if it succeeds, else returns 'false'.
-    public boolean createBkpLocation(Path location){
+    // The following String array contains the header tokens for csv database file
+    private String[] header = {"modFileName", "OriginalFileName", "ParentDirectory"};
+
+
+    public ConfigOp(String bkpPath){
+        this.bkpLocation = Paths.get(bkpPath);
         
-        Path pathLocation;
+        FileSystem currentFileSystem = FileSystems.getDefault();
+        this.separator = currentFileSystem.getSeparator();
+                
+        String filePathString = this.bkpLocation.toString() + this.separator + this.configFileName;
+        this.configFilePath = Paths.get(filePathString);
+
+    } // end of constructor
+
+
+
+    /**
+        Creates a folder at backup location chosen by the user
+     */
+
+    public boolean createBkpLocation(){
+        
         try{
-            pathLocation = Files.createDirectory(location);
+            Files.createDirectory(this.bkpLocation);
+            createConfigFile();
             return true;
         }
         catch(IOException ioe){
@@ -36,29 +50,106 @@ public class ConfigOp{
         
     }
 
-    //Function to create a new config file at backup location and populate with
-    //metadata
 
-    public Path createConfigFile(Path configFileLocation){
+
+    /**
+        Create a new config file and populate it with metadata
+     */
+
+    public Path createConfigFile(){
         
-        FileSystem currentFileSystem = FileSystems.getDefault();
-        String separator = currentFileSystem.getSeparator();
-        System.out.println("File separator is "+separator);
-        System.out.println("File system is +"+currentFileSystem.toString()+
-                            "provided by "+currentFileSystem.provider().toString());
-        
-        String filePathString = configFileLocation.toString() + separator + configFileName;
-        System.out.println(filePathString);
-        Path configFilePath = Paths.get(filePathString);
-        Path returnPath = null;
         try{
-            returnPath = Files.createFile(configFilePath); 
+            Files.createFile(this.configFilePath); 
         }
         catch(IOException ioe){
             System.err.println("ERROR:Could not create config file");
         }
-        
-        return returnPath;
+
+
+        // Add metadata
+         String[] keys = {"BackUpPath",
+                         "FileSeparator"
+                        };
+
+        String[] values = {this.bkpLocation.toString(),
+                            this.separator
+                            };
+        addProperties(keys, values);
+
+        return this.configFilePath;
+    } // end of function
+
+   
+
+
+    /**
+        Adds metadata to config file in the form key:value pairs
+     */
+
+    public boolean addProperties(String[] keys, String[] values){
+        boolean result = false;
+        if(keys.length == values.length){
+            Properties bkpProperties = new Properties();
+            
+            int i;
+            for(i = 0; i <= keys.length - 1; i ++){
+                bkpProperties.setProperty(keys[i], values[i]);
+            }
+
+            try(BufferedWriter writer = Files.newBufferedWriter(this.configFilePath,
+                                        StandardOpenOption.APPEND)){
+            bkpProperties.store(writer,"");
+            result = true;
+            }
+            catch(IOException ioe){
+                System.err.println("ERROR: Cannot write properties to config file");
+            }
+        }
+        return result;
+    } // end of function
+
+
+
+
+    /**
+        Returns the 'value' corresponding to the 'key' from config properties
+     */
+
+    public String getProperty(String key){
+        Properties bkpProperties = new Properties();
+        String value = "";
+        try(BufferedReader reader = Files.newBufferedReader(this.configFilePath)){
+            bkpProperties.load(reader);
+            value = bkpProperties.getProperty(key);
+        }
+        catch(IOException ioe){
+            System.err.println("ERROR: Could not reader config property");
+        }
+
+        return value;
     }
+
+
+    /**
+        Returns the backup location in the form of a String
+     */
+
+    public String getBackupLocation(){
+        return this.bkpLocation.toString();
+    } 
+
+    /**
+        Creates a csv database file with headers
+     */
+
+    public void createCsvDataBase(String FileName){
+        
+        CsvOp csvop = new CsvOp(this.bkpLocation.toString() + 
+                            this.separator.toString() + 
+                            FileName);
+        csvop.createCsvFile();
+        csvop.addHeader(header);
+
+    } // end of function
 
 } // end of class

@@ -41,7 +41,7 @@ public class IncBkpCmd{
                 try{
                     System.out.print("Select Option:");
                     Scanner scan = new Scanner(System.in);
-                    selection = new Integer(scan.next());
+                    selection = scan.nextInt();
                     checkRange(selection, list.size());
                     break;
                 }

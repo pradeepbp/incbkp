@@ -51,10 +51,12 @@ import java.util.*;
             for(int i = 0; i <= splitPath.length - 2; i ++){
                 parentFolder = parentFolder + splitPath[i] + this.fileSeparator;
             }
+            
             System.out.println(parentFolder + "::" + fileName);
             //System.out.println(fileName);
         }
-        
+           
+
         return list.size();
     }
 

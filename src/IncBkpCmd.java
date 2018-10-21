@@ -15,15 +15,15 @@ public class IncBkpCmd{
         Present an interactive session for user to select the backup location of her choice
      */
 
-    public int AppIntroCmd(){
+    public int getSelectionOfBkpLocationInCmd(){
             Path listPath = Paths.get("bkplist");
             List<String> list =  null;
             
-            System.out.println("Availabe backups are:");
+            System.out.println("Choose a backup location:");
             int i = 1;
             try{
                 list  = Files.readAllLines(listPath);
-                list.add("-> Exit");
+                list.add("Exit");
                 
                 for(String item: list){
                     System.out.format("(%d) %s\n", i, item);
@@ -74,13 +74,16 @@ public class IncBkpCmd{
         
          */
        
-        public int getUserOption(){
+        public int getUserIntroOption(){
             
             String[] options = {"Create a new backup",
-                                "Open an existing backup",
+                                "Add files/folders to an existing backup",
                                 "Restore files from an existing backup",
                                 "Exit"};
             
+            // Print welcome message with version details
+            System.out.println("\n\nIncremental Backup Utility, Version: Alpha\n");    
+
 
             // Add options to a list
             ArrayList<String> list = new ArrayList<String>();
@@ -121,7 +124,7 @@ public class IncBkpCmd{
 
          */
 
-        public Path getNewBackupLocation(){
+        public Path createBackupInCmd(){
             Path bkpPath = null;
             boolean flag = false;
             String location = null;
@@ -157,7 +160,36 @@ public class IncBkpCmd{
                 
                 bkpLoc = location + separator + bkpName;
             }
+            ConfigOp config = new ConfigOp(bkpLoc);
+            config.createBkpLocation();
             return Paths.get(bkpLoc);
         } 
+
+
+    /**
+        Function to add files/folders to an existing backup from commmand line
+     */
+
+    public void addItemToBackupInCmd(){
+        int selection = getSelectionOfBkpLocationInCmd();
+
+    }
+
+
+    /**
+        App initiating function which interacts with user and responds based on the 
+        user input.
+     */
+
+    public void interactWithUserInCmd(){
+        int option = getUserIntroOption();
+
+        switch(option){
+            case 1: createBackupInCmd();
+                    break;
+            case 2: addItemToBackupInCmd();       
+                    break;
+        }
+    }
 
 } // end of class

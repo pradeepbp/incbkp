@@ -39,6 +39,7 @@ public class ConfigOp{
         try{
             Files.createDirectory(this.bkpLocation);
             createConfigFile();
+            updateMasterListOfBkps(this.bkpLocation);
             return true;
         }
         catch(IOException ioe){
@@ -48,6 +49,16 @@ public class ConfigOp{
         
     }
 
+    public void updateMasterListOfBkps(Path location){
+        Path pathMaster = Paths.get("bkplist");
+        try(BufferedWriter writer = Files.newBufferedWriter(pathMaster, StandardOpenOption.APPEND)){
+            writer.write(location.toString());
+            writer.newLine();
+        }
+        catch(IOException ioe){
+            System.err.println("ERROR: Master file updation failed");
+        }
+    }
 
 
     /**
@@ -55,14 +66,14 @@ public class ConfigOp{
      */
 
     public Path createConfigFile(){
-        
+        int errorCode = 0;   
         try{
             Files.createFile(this.configFilePath); 
         }
         catch(IOException ioe){
             System.err.println("ERROR:Could not create config file");
+            errorCode = 1;
         }
-
 
         // Add metadata
          String[] keys = {"BackUpPath",

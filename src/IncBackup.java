@@ -33,14 +33,9 @@ class IncBackup{
     public static void main(String[] args){
         
         IncBkpCmd cmdIn = new IncBkpCmd();
-        int option = cmdIn.getUserOption();
+        cmdIn.interactWithUserInCmd();
 
-        Path loc = null;
-        switch(option) {
-            case 1: loc = cmdIn.getNewBackupLocation();
-                                
-        }
-        System.out.println(loc.toString());
+        
     }// main function
 
 } // main class ends

@@ -15,7 +15,7 @@ public class IncBkpCmd{
         Present an interactive session for user to select the backup location of her choice
      */
 
-    public int getSelectionOfBkpLocationInCmd(){
+    public Path getSelectionOfBkpLocationInCmd(){
             Path listPath = Paths.get("bkplist");
             List<String> list =  null;
             
@@ -52,7 +52,7 @@ public class IncBkpCmd{
             }
             
             System.out.println("Selected " + list.get(selection - 1));
-            return selection;
+            return Paths.get(list.get(selection - 1));
         } // end of function
 
 
@@ -147,13 +147,13 @@ public class IncBkpCmd{
                 }
             }
             // Get backup name
-            
+            String bkpName = null;
             if(flag){
                 System.out.print("Enter backup name without ant special charecters...\n" + 
                                   "(any existing folder with " +
                                   "same name will be overwritten):");
                 Scanner input = new Scanner(System.in);
-                String bkpName = input.next();
+                bkpName = input.next();
 
                 FileSystem currentFileSystem = FileSystems.getDefault();
                 String separator = currentFileSystem.getSeparator();
@@ -161,18 +161,29 @@ public class IncBkpCmd{
                 bkpLoc = location + separator + bkpName;
             }
             ConfigOp config = new ConfigOp(bkpLoc);
+            
             config.createBkpLocation();
+            config.createCsvDataBase(bkpName);
             return Paths.get(bkpLoc);
         } 
 
 
     /**
         Function to add files/folders to an existing backup from commmand line
+        
      */
 
     public void addItemToBackupInCmd(){
-        int selection = getSelectionOfBkpLocationInCmd();
+        Path selectedBkp = getSelectionOfBkpLocationInCmd();
+        System.out.print("Enter path of file to add:");
+        Scanner scan = new Scanner(System.in);
+        String filePathString = scan.nextLine(); // do not use can.next()
+                                                 // as it will skip whitespaces
 
+        DirectOp op = new DirectOp(selectedBkp);
+        op.addFileToBkp(filePathString);  
+
+        
     }
 
 

@@ -13,12 +13,15 @@ import java.util.*;
 
     String fileSeparator;
     Path bkpLocation;
+    String bkpName;
     
     // Constructor
     public DirectOp(Path bkpLocation){
         this.bkpLocation = bkpLocation;
         ConfigOp newConfOp = new ConfigOp(this.bkpLocation.toString());
         this.fileSeparator = newConfOp.getProperty("FileSeparator");
+        String[] tempString = this.bkpLocation.toString().split(this.fileSeparator);
+        this.bkpName = tempString[tempString.length - 1];
     }
   
     
@@ -27,11 +30,11 @@ import java.util.*;
 
     */
 
-    public int addFilesToBase(String fileLocation){
+    public int addFolderToBkp(String folderPath){
         BkpFileVisitor fileVisitor = new BkpFileVisitor();
         ArrayList<String> list = new ArrayList<String>();
 
-        Path fileLocPath = Paths.get(fileLocation);
+        Path fileLocPath = Paths.get(folderPath);
         System.out.println(fileLocPath.toString());
         try{
             Path p = Files.walkFileTree(fileLocPath, fileVisitor);
@@ -60,7 +63,35 @@ import java.util.*;
         return list.size();
     }
 
+
+    /**
+        Adds a file to existing backup location; updates the data base with relevant file info
+        
+     */
     
+    public void addFileToBkp(String filePathString){
+        Path sourcePath = Paths.get(filePathString);
+
+        //Get filename
+        String[] filePathSplit = filePathString.split(this.fileSeparator);
+        String fileName = filePathSplit[filePathSplit.length - 1];
+        String targetFileName = this.bkpName +"-"+fileName; 
+
+        String targetPathString = this.bkpLocation.toString() + this.fileSeparator +
+                                    targetFileName;
+        Path targetPath = Paths.get(targetPathString);
+
+        //Copy file to target location
+        try{
+            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch(IOException ioe){
+            System.err.println("ERROR: Could not copy file to backup location");
+        }
+        
+    }
+
+
 } // end of DirectOp class
 
 

@@ -180,8 +180,21 @@ public class IncBkpCmd{
         String filePathString = scan.nextLine(); // do not use can.next()
                                                  // as it will skip whitespaces
 
+        /*
+            This will check whether the chosen path represents a file or a folder
+            and calls the appropriate response
+        */
         DirectOp op = new DirectOp(selectedBkp);
-        op.addFileToBkp(filePathString);  
+        if(Files.isDirectory(selectedBkp)){
+            System.out.println("Folder selected. Files in the folder" +
+                                " will be backed up");
+            op.addFolderToBkp(filePathString);
+        }
+        else{
+            
+            op.addFileToBkp(filePathString);
+        }
+     
 
         
     }

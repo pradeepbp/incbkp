@@ -8,6 +8,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.*;
 import java.io.*;
 import java.util.*;
+import java.time.*;
 
  public class DirectOp{
 
@@ -48,18 +49,22 @@ import java.util.*;
         String fileName, parentFolder;
         String[] splitPath;
         for(String file: list){
+            
+            // following for debugging only
+            /*
             splitPath = file.split(this.fileSeparator);
             fileName =  splitPath[splitPath.length - 1];
-            parentFolder = "";
-            for(int i = 0; i <= splitPath.length - 2; i ++){
-                parentFolder = parentFolder + splitPath[i] + this.fileSeparator;
+            parentFolder = splitPath[0];
+            for(int i = 1; i <= splitPath.length - 2; i ++){
+                parentFolder = parentFolder + this.fileSeparator + splitPath[i];
             }
             
             System.out.println(parentFolder + "::" + fileName);
+            */
             //System.out.println(fileName);
+            addFileToBkp(file);
         }
            
-
         return list.size();
     }
 
@@ -74,11 +79,25 @@ import java.util.*;
 
         //Get filename
         String[] filePathSplit = filePathString.split(this.fileSeparator);
-        String fileName = filePathSplit[filePathSplit.length - 1];
-        String targetFileName = this.bkpName +"-"+fileName; 
+        String origFileName = filePathSplit[filePathSplit.length - 1];
 
+        
+        String sourceFileLocation = filePathSplit[0];
+        for(int i = 1; i <= filePathSplit.length - 2; i++){
+            sourceFileLocation = sourceFileLocation + 
+                                 this.fileSeparator + filePathSplit[i];
+        }
+        //System.out.println(sourceFileLocation); // for debugging only
+        
+
+        // Get timestamp and prepend to the original file name to avoid duplicates
+        Instant timeStamp = Instant.now();
+        String fileNameMod = new Long(timeStamp.toEpochMilli()).toString();
+        String targetFileName = fileNameMod +"-"+ origFileName;
+
+        // This assumes that 'bkp' subfolder is already available
         String targetPathString = this.bkpLocation.toString() + this.fileSeparator +
-                                    targetFileName;
+                                    "bkp" + this.fileSeparator + targetFileName;
         Path targetPath = Paths.get(targetPathString);
 
         //Copy file to target location
@@ -88,7 +107,11 @@ import java.util.*;
         catch(IOException ioe){
             System.err.println("ERROR: Could not copy file to backup location");
         }
-        
+
+        CsvOp csvHandler = new CsvOp(this.bkpLocation + this.fileSeparator +
+                                            this.bkpName);
+        String dataRow  = targetFileName + "," + origFileName +","+ sourceFileLocation; 
+        csvHandler.addRow(dataRow);
     }
 
 

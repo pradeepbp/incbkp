@@ -11,7 +11,7 @@ public class ConfigOp{
     Path bkpLocation = null;
     Path configFilePath = null;
     String separator = "";
-
+    Path bkpSubLoc = null;
 
     // The following String array contains the header tokens for csv database file
     private String[] header = {"modFileName", "OriginalFileName", "ParentDirectory"};
@@ -19,13 +19,15 @@ public class ConfigOp{
 
     public ConfigOp(String bkpPath){
         this.bkpLocation = Paths.get(bkpPath);
-        
+         
+
         FileSystem currentFileSystem = FileSystems.getDefault();
         this.separator = currentFileSystem.getSeparator();
                 
         String filePathString = this.bkpLocation.toString() + this.separator + this.configFileName;
         this.configFilePath = Paths.get(filePathString);
 
+        this.bkpSubLoc = Paths.get(bkpPath + this.separator + "bkp");
     } // end of constructor
 
 
@@ -38,6 +40,10 @@ public class ConfigOp{
         
         try{
             Files.createDirectory(this.bkpLocation);
+            
+            //Add folder where files will be copied
+            Files.createDirectory(this.bkpSubLoc);
+            
             createConfigFile();
             updateMasterListOfBkps(this.bkpLocation);
             return true;

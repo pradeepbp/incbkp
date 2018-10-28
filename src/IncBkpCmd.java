@@ -185,7 +185,7 @@ public class IncBkpCmd{
             and calls the appropriate response
         */
         DirectOp op = new DirectOp(selectedBkp);
-        if(Files.isDirectory(selectedBkp)){
+        if(Files.isDirectory(Paths.get(filePathString))){
             System.out.println("Folder selected. Files in the folder" +
                                 " will be backed up");
             op.addFolderToBkp(filePathString);
